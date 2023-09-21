@@ -1,0 +1,72 @@
+--------------------
+
+
+docker 	run
+	start
+	pause
+	unpause
+	stop
+	kill
+	rm
+	logs [id or name]
+	port
+	inspect
+
+
+docker run -it ubuntu
+	интерактивный режим с терминалом
+docker run -d mysql
+	запуск как демон ОС
+
+-e задает переменные окружения
+docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=toor -d mysql
+
+-p проброс порта
+docker run -d -p 8888:80 --name my-httpd httpd
+
+-v монтируем каталог хоста в контейнер
+docker run -dit --name my-apache-app -v "$PWD":/usr/local/apache2/htdocs/ httpd
+Если в команде опустить целевую директорию, то Docker создаст ее в 
+/var/lib/docker/volumes/.
+
+--volumes-from <id> копирует подключенные каталоги
+
+--rm контейнер создастся, выполнится и удалится сразу после остановки 
+
+
+docker run --name my-httpd -p 8888:80 -v /home/dim/docker-tips/mywww/:/usr/local/apache2/htdocs/ -d httpd
+
+
+
+docker port <id>
+
+запуск программы внутри контейнера
+последний аргумент - сама команда
+
+docker exec -it mysql-test bash
+
+docker run -it --name ubuntu ubuntu /bin/bash
+
+
+
+скрипт запуска внутри контейнера (столбец COMMAND)
+cat /usr/local/bin/docker-entrypoint.sh
+
+
+список процессов внутри контейнера
+docker top [id or name]
+
+
+Dockerfile
+FROM fedora:29
+RUN dnf -y install figlet
+ENTRYPOINT ["figlet", "TEST!qwe"]
+
+ADD some-file /some-file-on-host #монтирует файл в образ. Источник должен быть внутри дирректории с докерфайлом
+
+ENTRYPOIN по умолчанию /bin/sh -c
+CMD - передается на вход энтрипоинта
+
+
+Запуск контейнера из докерфайла
+docker build -t dbondarik/figlet:1.0 /path/to/Dockerfile/dir
